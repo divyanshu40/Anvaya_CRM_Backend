@@ -10,7 +10,12 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
-initializeDatabase();
+initializeDatabase()
+.then(() => {
+     app.listen(PORT, () => {
+         console.log(`Server is running on PORT ${PORT}` )
+     })
+ })
 
 // function to add new sales agent
 async function addNewSalesAgent(salesAgentData) {
