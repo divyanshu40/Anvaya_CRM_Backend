@@ -1,10 +1,11 @@
 const express = require("express");
 const cors = require("cors");
+require("dotenv").config();
 const { initializeDatabase } = require("./db/db.connect");
 const {salesAgent} = require("./models/salesAgent.model");
 const { lead } = require("./models/lead.model");
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(express.json());
