@@ -70,4 +70,3 @@ app.get("/salesAgents", async (req, res) => {
     }
 });
 
-module.exports = app
