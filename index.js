@@ -11,7 +11,15 @@ app.use(cors());
 app.use(express.json());
 
 
-initializeDatabase()
+app.use(async (req, res, next) => {
+  try {
+    await initializeDatabase();
+    next(); // proceed to route
+  } catch (err) {
+    console.error("DB init failed", err);
+    res.status(500).json({ error: "Failed to connect to database" });
+  }
+});
 
 // function to add new sales agent
 async function addNewSalesAgent(salesAgentData) {
