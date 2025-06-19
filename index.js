@@ -55,11 +55,11 @@ async function getAllSalesAgents() {
 
     app.get("/salesAgents", async (req, res) => {
       try {
-        const salesAgents = await salesAgent.find();
-        if (salesAgents.length === 0) {
+        let response = await getAllSalesAgents();
+        if (response.salesAgents.length === 0) {
           return res.status(404).json({ message: "No sales agents found" });
         }
-        res.status(200).json({ salesAgents });
+        res.status(200).json(response);
       } catch (error) {
         res.status(500).json({ error: error.message });
       }
