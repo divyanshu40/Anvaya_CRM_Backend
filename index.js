@@ -10,7 +10,7 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
-
+initializeDatabase();
 
 // function to add new sales agent
 async function addNewSalesAgent(salesAgentData) {
@@ -54,7 +54,6 @@ app.post("/lead/new", async (req, res) => {
 
 // GET route to get all sales agents
 app.get("/salesAgents", async (req, res) => {
-    await initializeDatabase();
     try {
         let response = await getAllSalesAgents();
         if (response.salesAgents.length === 0) {
