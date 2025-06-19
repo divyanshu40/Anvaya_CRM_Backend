@@ -30,44 +30,40 @@ async function getAllSalesAgents() {
     return { salesAgents }
 }
 
-(async () => {
-  try {
+// POST Route to add new sales agent
+app.post("/salesAgent/new", async (req, res) => {
+    let salesAgentData = req.body;
+    try {
+        let response = await addNewSalesAgent(salesAgentData);
+        return res.status(201).json(response);
+    } catch(error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// POST Route to add new lead
+app.post("/lead/new", async (req, res) => {
+    let leadData = req.body;
+    try {
+        let response = await addNewLead(leadData);
+        res.status(201).json(response);
+    } catch(error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// GET route to get all sales agents
+app.get("/salesAgents", async (req, res) => {
     await initializeDatabase();
-
-    // Routes
-    app.post("/salesAgent/new", async (req, res) => {
-      try {
-        const addedSalesAgent = await new salesAgent(req.body).save();
-        res.status(201).json({ addedSalesAgent });
-      } catch (error) {
-        res.status(500).json({ error: error.message });
-      }
-    });
-
-    app.post("/lead/new", async (req, res) => {
-      try {
-        const addedLead = await new lead(req.body).save();
-        res.status(201).json({ addedLead });
-      } catch (error) {
-        res.status(500).json({ error: error.message });
-      }
-    });
-
-    app.get("/salesAgents", async (req, res) => {
-      try {
+    try {
         let response = await getAllSalesAgents();
         if (response.salesAgents.length === 0) {
-          return res.status(404).json({ message: "No sales agents found" });
+            return res.status(404).json({ message: "No sales agents found" });
         }
-        res.status(200).json(response);
-      } catch (error) {
+        return res.status(200).json(response);
+    } catch(error) {
         res.status(500).json({ error: error.message });
-      }
-    });
-
-  } catch (err) {
-    console.error("Failed to initialize database:", err);
-  }
-})();
+    }
+});
 
 module.exports = app
