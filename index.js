@@ -10,12 +10,21 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
-initializeDatabase()
-.then(() => {
-     app.listen(PORT, () => {
-         console.log(`Server is running on PORT ${PORT}` )
-     })
- })
+let isReady = false;
+let handler;
+
+const setup = async () => {
+  if (!isReady) {
+    await initializeDatabase();
+    isReady = true;
+    console.log("✅ MongoDB connected. App is ready.");
+    handler = app;
+  }
+};
+
+setup();
+
+
 
 // function to add new sales agent
 async function addNewSalesAgent(salesAgentData) {
@@ -70,3 +79,7 @@ app.get("/salesAgents", async (req, res) => {
     }
 });
 
+module.exports = async (req, res) => {
+  if (!isReady) await setup();
+  return handler(req, res);
+};
