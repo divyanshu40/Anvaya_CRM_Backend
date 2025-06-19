@@ -13,6 +13,8 @@ app.use(express.json());
 initializeDatabase();
 
 
+
+
 // function to add new sales agent
 async function addNewSalesAgent(salesAgentData) {
     let addedSalesAgent = await new salesAgent(salesAgentData).save();
@@ -66,6 +68,10 @@ app.get("/salesAgents", async (req, res) => {
     }
 });
 
+app.listen(PORT, () => {
+         console.log(`Server is running on PORT ${PORT}` )
+     })
 
 
- module.exports = app;
+
+ //module.exports = app;
