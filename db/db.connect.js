@@ -13,10 +13,7 @@ const initializeDatabase = async () => {
   }
 
   try {
-    await mongoose.connect(mongoUri, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true
-    });
+    await mongoose.connect(mongoUri);
 
     isConnected = true;
     console.log("=> New database connection established");
