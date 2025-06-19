@@ -10,6 +10,8 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
+initializeDatabase();
+
 
 // function to add new sales agent
 async function addNewSalesAgent(salesAgentData) {
@@ -64,12 +66,6 @@ app.get("/salesAgents", async (req, res) => {
     }
 });
 
-let isDbConnected = false;
-module.exports = async (req, res) => {
-  if (!isDbConnected) {
-    await initializeDatabase();
-    isDbConnected = true;
-  }
 
-  return app(req, res); // Express-style handling
-};
+
+ module.exports = app;
