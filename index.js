@@ -12,12 +12,6 @@ app.use(express.json());
 
 
 initializeDatabase()
-.then(() => {
-    console.log("Connected to MongoDB");
-    app.listen(PORT, () => {
-        console.log("server is running on PORT 3000");
-    })
-})
 
 // function to add new sales agent
 async function addNewSalesAgent(salesAgentData) {
@@ -71,3 +65,5 @@ app.get("/salesAgents", async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 });
+
+module.exports = app
