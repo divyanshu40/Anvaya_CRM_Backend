@@ -11,15 +11,6 @@ app.use(cors());
 app.use(express.json());
 
 
-app.use(async (req, res, next) => {
-  try {
-    await initializeDatabase();
-    next(); // proceed to route
-  } catch (err) {
-    console.error("DB init failed", err);
-    res.status(500).json({ error: "Failed to connect to database" });
-  }
-});
 
 // function to add new sales agent
 async function addNewSalesAgent(salesAgentData) {
@@ -39,39 +30,44 @@ async function getAllSalesAgents() {
     return { salesAgents }
 }
 
-// POST Route to add new sales agent
-app.post("/salesAgent/new", async (req, res) => {
-    let salesAgentData = req.body;
-    try {
-        let response = await addNewSalesAgent(salesAgentData);
-        return res.status(201).json(response);
-    } catch(error) {
-        res.status(500).json({ error: error.message });
-    }
-});
+(async () => {
+  try {
+    await initializeDatabase();
 
-// POST Route to add new lead
-app.post("/lead/new", async (req, res) => {
-    let leadData = req.body;
-    try {
-        let response = await addNewLead(leadData);
-        res.status(201).json(response);
-    } catch(error) {
+    // Routes
+    app.post("/salesAgent/new", async (req, res) => {
+      try {
+        const addedSalesAgent = await new salesAgent(req.body).save();
+        res.status(201).json({ addedSalesAgent });
+      } catch (error) {
         res.status(500).json({ error: error.message });
-    }
-});
+      }
+    });
 
-// GET route to get all sales agents
-app.get("/salesAgents", async (req, res) => {
-    try {
-        let response = await getAllSalesAgents();
-        if (response.salesAgents.length === 0) {
-            return res.status(404).json({ message: "No sales agents found" });
+    app.post("/lead/new", async (req, res) => {
+      try {
+        const addedLead = await new lead(req.body).save();
+        res.status(201).json({ addedLead });
+      } catch (error) {
+        res.status(500).json({ error: error.message });
+      }
+    });
+
+    app.get("/salesAgents", async (req, res) => {
+      try {
+        const salesAgents = await salesAgent.find();
+        if (salesAgents.length === 0) {
+          return res.status(404).json({ message: "No sales agents found" });
         }
-        return res.status(200).json(response);
-    } catch(error) {
+        res.status(200).json({ salesAgents });
+      } catch (error) {
         res.status(500).json({ error: error.message });
-    }
-});
+      }
+    });
+
+  } catch (err) {
+    console.error("Failed to initialize database:", err);
+  }
+})();
 
 module.exports = app
