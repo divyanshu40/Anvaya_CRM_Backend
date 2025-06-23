@@ -27,6 +27,12 @@ async function addNewLead(leadData) {
     return { addedLead };
 }
 
+// function to add multiple leads
+async function addMultipleLeads(leadsData) {
+    let addedLeads = await lead.insertMany(leadsData);
+    return { addedLeads };
+}
+
 // function to get all sales agents
 async function getAllSalesAgents() {
     let salesAgents = await salesAgent.find();
@@ -55,6 +61,17 @@ app.post("/lead/new", async (req, res) => {
     }
 });
 
+// POST Route to add multiple leads
+app.post("/leads/new", async (req, res) => {
+    let leadsData = req.body;
+    try {
+        let response = await addMultipleLeads(leadsData);
+        return res.status(201).json(response);
+    } catch(error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
 // GET route to get all sales agents
 app.get("/salesAgents", async (req, res) => {
     try {
@@ -72,6 +89,3 @@ app.listen(PORT, () => {
          console.log(`Server is running on PORT ${PORT}` )
      })
 
-
-
- //module.exports = app;
