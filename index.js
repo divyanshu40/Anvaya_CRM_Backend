@@ -39,6 +39,12 @@ async function getAllSalesAgents() {
     return { salesAgents }
 }
 
+// function to get all leads
+async function getAllLeads() {
+    let leads = await lead.find();
+    return leads
+}
+
 // POST Route to add new sales agent
 app.post("/salesAgent/new", async (req, res) => {
     let salesAgentData = req.body;
@@ -78,6 +84,19 @@ app.get("/salesAgents", async (req, res) => {
         let response = await getAllSalesAgents();
         if (response.salesAgents.length === 0) {
             return res.status(404).json({ message: "No sales agents found" });
+        }
+        return res.status(200).json(response);
+    } catch(error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// GET Route to get all leads
+app.get("/leads", async (req, res) => {
+    try {
+        let response = await getAllLeads();
+        if (response.length === 0) {
+            return res.status(404).json({ message: "No leads found" });
         }
         return res.status(200).json(response);
     } catch(error) {
