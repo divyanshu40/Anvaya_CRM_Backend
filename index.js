@@ -45,6 +45,36 @@ async function getAllLeads() {
     return leads
 }
 
+// function to get lead by id
+async function getLeadById(leadId) {
+    let leadDetails = await lead.findById(leadId);
+    if (! leadDetails) {
+        return null;
+    }
+    return leadDetails;
+}
+
+// function to filter leads
+async function filterLeads(filterParams) {
+    let {status, salesAgent, tags, source } = filterParams;
+    let filter = {};
+    if (status) {
+        filter.status = status;
+    }
+    if (salesAgent) {
+        filter.salesAgent = salesAgent;
+    }
+    if (tags) {
+        filter.tags = Array.isArray(tags) ? { $in: tags } : tags;
+    }
+    if (source) {
+        filter.source = source;
+    }
+    let filteredLeads = await lead.find(filter);
+    return filteredLeads;
+
+}
+
 // POST Route to add new sales agent
 app.post("/salesAgent/new", async (req, res) => {
     let salesAgentData = req.body;
@@ -95,6 +125,34 @@ app.get("/salesAgents", async (req, res) => {
 app.get("/leads", async (req, res) => {
     try {
         let response = await getAllLeads();
+        if (response.length === 0) {
+            return res.status(404).json({ message: "No leads found" });
+        }
+        return res.status(200).json(response);
+    } catch(error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// GET Route to get lead by id
+app.get("/lead/details/:id", async (req, res) => {
+    let leadId = req.params.id;
+    try {
+        let response = await getLeadById(leadId);
+        if (response === null) {
+            return res.status(404).json({ message: "Lead not found" });
+        }
+        return res.status(200).json(response);
+    } catch(error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// GET Route to filter leads
+app.get("/leads/filter", async (req, res) => {
+    let filterParams = req.query;
+    try {
+        let response = await filterLeads(filterParams);
         if (response.length === 0) {
             return res.status(404).json({ message: "No leads found" });
         }
