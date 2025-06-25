@@ -42,7 +42,7 @@ async function getAllSalesAgents() {
 
 // function to get all leads
 async function getAllLeads() {
-    let leads = await lead.find();
+    let leads = await lead.find().populate("salesAgent");
     return leads
 }
 
