@@ -66,7 +66,7 @@ async function filterLeads(filterParams) {
         filter.salesAgent = salesAgent;
     }
     if (tags) {
-        filter.tags = Array.isArray(tags) ? { $in: tags } : tags;
+        filter.tags = tags;
     }
     if (source) {
         filter.source = source;
