@@ -37,7 +37,7 @@ async function addMultipleLeads(leadsData) {
 // function to get all sales agents
 async function getAllSalesAgents() {
     let salesAgents = await salesAgent.find();
-    return { salesAgents }
+    return salesAgents ;
 }
 
 // function to get all leads
@@ -201,7 +201,7 @@ app.delete("/leads/delete/:id", async (req, res) => {
 app.get("/salesAgents", async (req, res) => {
     try {
         let response = await getAllSalesAgents();
-        if (response.salesAgents.length === 0) {
+        if (response.length === 0) {
             return res.status(404).json({ message: "No sales agents found" });
         }
         return res.status(200).json(response);
