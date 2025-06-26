@@ -48,7 +48,7 @@ async function getAllLeads() {
 
 // function to get lead by id
 async function getLeadById(leadId) {
-    let leadDetails = await lead.findById(leadId);
+    let leadDetails = await lead.findById(leadId).populate("salesAgent");
     if (! leadDetails) {
         return null;
     }
@@ -71,7 +71,7 @@ async function filterLeads(filterParams) {
     if (source) {
         filter.source = source;
     }
-    let filteredLeads = await lead.find(filter);
+    let filteredLeads = await lead.find(filter).populate("salesAgent");
     return filteredLeads;
 
 }
@@ -102,7 +102,7 @@ async function addNewComment(commentData) {
 
 // function to get all comments of a lead
 async function getAllCommentsOfLead(leadId) {
-    let comments = await comment.find({ lead: leadId });
+    let comments = await comment.find({ lead: leadId }).populate("author");
     return comments;
 }
 
@@ -114,13 +114,13 @@ async function getLeadsClosedLastWeek() {
     let leads = await lead.find({
         status: "Closed",
         closedAt: { $gte: oneWeekAgo, $lte: today }
-    }).sort({ closedAt: -1 });
+    }).sort({ closedAt: -1 }).populate("salesAgent");
     return leads;
 }
 
 // function to get all leads in the pipeline
 async function getAllLeadsInPipeline() {
-    let leads = await lead.find({ status: { $in: ['New', 'Contacted', 'Qualified', 'Proposal Sent'] } });
+    let leads = await lead.find({ status: { $in: ['New', 'Contacted', 'Qualified', 'Proposal Sent'] } }).populate("salesAgent");
     return leads;
 }
 
