@@ -14,6 +14,6 @@ const SalesAgentSchema = new mongoose.Schema({
     timestamps: true
 });
 
-const salesAgent = mongoose.model("SalesAgent", SalesAgentSchema);
+const salesAgent = mongoose.model("salesAgent", SalesAgentSchema);
 
 module.exports = { salesAgent };
