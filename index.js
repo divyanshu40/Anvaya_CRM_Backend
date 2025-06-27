@@ -100,6 +100,12 @@ async function addNewComment(commentData) {
     return addedComment;
 }
 
+// function to add multiple comments
+async function addMultipleComments(commentsData) {
+    let addedComments = await comment.insertMany(commentsData);
+    return addedComments
+}
+
 // function to get all comments of a lead
 async function getAllCommentsOfLead(leadId) {
     let comments = await comment.find({ lead: leadId }).populate("author");
@@ -173,10 +179,21 @@ app.post("/leads/update/:id", async (req, res) => {
 });
 
 // POST Route to add new comment 
-app.post("/comments/new", async (req, res) => {
+app.post("/comment/new", async (req, res) => {
     let commentData = req.body;
     try {
         let response = await addNewComment(commentData);
+        return res.status(201).json(response);
+    } catch(error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// POST Route to add multiple comments
+app.post("/comments/new", async (req, res) => {
+    let commentsData = req.body;
+    try {
+        let response = await addMultipleComments(commentsData);
         return res.status(201).json(response);
     } catch(error) {
         res.status(500).json({ error: error.message });
