@@ -71,6 +71,9 @@ async function filterLeads(filterParams) {
     if (source) {
         filter.source = source;
     }
+    if (priority) {
+        filter.priority = priority;
+    }
     let filteredLeads = await lead.find(filter).populate("salesAgent");
     return filteredLeads;
 
