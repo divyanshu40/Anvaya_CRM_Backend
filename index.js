@@ -57,7 +57,7 @@ async function getLeadById(leadId) {
 
 // function to filter leads
 async function filterLeads(filterParams) {
-    let {status, salesAgent, tags, source } = filterParams;
+    let {status, salesAgent, tags, source, priority } = filterParams;
     let filter = {};
     if (status) {
         filter.status = status;
